@@ -95,3 +95,33 @@ intencionDeVotoEn(misiones, amarillo, 0).
 
 
 esPicante(Provincia):- habitantes(Provincia,Numero),Numero>1000000, sePresentan(Provincia,Alguien),length(Alguien,Numero2),Numero2>=3.
+
+%Hay tres casos
+%CandidatoUno se presenta y CandidatoDos no -> gana CandidatoUno
+%Ambos se presentan (distintos partidos) entonces se hace diferencia por votos, si hay empate no se cumple
+%Ambos se presentan (igual partido) entonces gana el primero
+
+leGanaA(CandidatoUno,CandidatoDos,Provincia):-
+sePresenta(CandidatoUno,Provincia),
+not(sePresenta(CandidatoDos,Provincia)).
+
+leGanaA(CandidatoUno,CandidatoDos,Provincia):- 
+candidato(CandidatoUno,PartidoUno),
+candidato(CandidatoDos,PartidoDos),
+sePresenta(CandidatoUno,Provincia),
+sePresenta(CandidatoDos,Provincia),
+mismoPartido(CandidatoUno,CandidatoDos),
+intencionDeVotoEn(Provincia,PartidoUno,NumeroUno),
+intencionDeVotoEn(Provincia,PartidoDos,NumeroDos),
+NumeroUno>NumeroDos.
+
+leGanaA(CandidatoUno,CandidatoDos,Provincia):-
+candidato(CandidatoUno,PartidoUno),
+candidato(CandidatoDos,PartidoDos),
+sePresenta(CandidatoUno,Provincia),
+sePresenta(CandidatoDos,Provincia),
+sePresentan(Provincia,PartidoUno),
+PartidoUno==PartidoDos.
+
+sePresenta(Candidato,Provincia):- candidato(Candidato,Partido),sePresentan(Provincia,ListaPartidos),member(Partido,ListaPartidos). 
+mismoPartido(CandidatoUno,CandidatoDos):-candidato(CandidatoUno,PartidoUno),candidato(CandidatoDos,PartidoDos),PartidoUno==PartidoDos.
