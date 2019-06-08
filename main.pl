@@ -107,6 +107,20 @@ intencionDeVotoEn(misiones, rojo, 90).
 intencionDeVotoEn(misiones, azul, 0).
 intencionDeVotoEn(misiones, amarillo, 0).
 
+% inflacion(contaInferior, cotaSuperior)
+% construir(listaDeObras)
+% nuevosPuestosDeTrabajo(cantidad)
+% edilicio(hospital, 800)
+
+partido(azul,construir([edilicio(hospital,1000),edilicio(jardines,100),edilicio(escuelas,5)])).
+partido(amarillo,construir([edilicio(hospital,100),edilicio(universidad,1),edilicio(comisaria,200)])).
+partido(rojo,nuevosPuestosDeTrabajo(800000)).
+partido(amarillo,nuevosPuestosDeTrabajo(10000)).
+partido(rojo,inflacion(10,30)).
+partido(amarillo,inflacion(1,15)).
+partido(azul,inflacion(2,4)).
+
+
 
 
 
@@ -160,3 +174,7 @@ intencionDeVoto(Provincia,ListaVotos),
 max_member(NumeroDos,ListaVotos),
 Numero<NumeroDos,
 PorcentajeRealVoto is (Numero+5).
+
+%Punto seis
+promete(Partido,Algo):-
+partido(Partido,Algo).
