@@ -3,7 +3,6 @@ candidato(frank,rojo).
 candidato(claire,rojo).
 candidato(garrett,azul).
 candidato(jackie,amarillo).
-candidato(_,violeta).
 candidato(linda,azul).
 candidato(catherine,rojo).
 candidato(seth,amarillo).
@@ -101,27 +100,23 @@ esPicante(Provincia):- habitantes(Provincia,Numero),Numero>1000000, sePresentan(
 %Ambos se presentan (distintos partidos) entonces se hace diferencia por votos, si hay empate no se cumple
 %Ambos se presentan (igual partido) entonces gana el primero
 
-leGanaA(CandidatoUno,CandidatoDos,Provincia):-
-sePresenta(CandidatoUno,Provincia),
-not(sePresenta(CandidatoDos,Provincia)).
-
 leGanaA(CandidatoUno,CandidatoDos,Provincia):- 
-candidato(CandidatoUno,PartidoUno),
-candidato(CandidatoDos,PartidoDos),
 sePresenta(CandidatoUno,Provincia),
 sePresenta(CandidatoDos,Provincia),
-mismoPartido(CandidatoUno,CandidatoDos),
-intencionDeVotoEn(Provincia,PartidoUno,NumeroUno),
-intencionDeVotoEn(Provincia,PartidoDos,NumeroDos),
-NumeroUno>NumeroDos.
+candidato(CandidatoUno,PartidoUno),
+candidato(CandidatoDos,PartidoDos),
+intencionDeVotoEn(Provincia,PartidoUno,PorcentajeUno),
+intencionDeVotoEn(Provincia,PartidoDos,PorcentajeDos),
+PorcentajeUno>PorcentajeDos.
 
 leGanaA(CandidatoUno,CandidatoDos,Provincia):-
-candidato(CandidatoUno,PartidoUno),
-candidato(CandidatoDos,PartidoDos),
 sePresenta(CandidatoUno,Provincia),
-sePresenta(CandidatoDos,Provincia),
-sePresentan(Provincia,PartidoUno),
-PartidoUno==PartidoDos.
+not(sePresenta(CandidatoDos,Provincia)),
+not(mismoPartido(CandidatoUno,CandidatoDos)).
+
+leGanaA(CandidatoUno,CandidatoDos,Provincia):-
+mismoPartido(CandidatoUno,CandidatoDos),
+sePresenta(CandidatoUno,Provincia).
 
 sePresenta(Candidato,Provincia):- candidato(Candidato,Partido),sePresentan(Provincia,ListaPartidos),member(Partido,ListaPartidos). 
-mismoPartido(CandidatoUno,CandidatoDos):-candidato(CandidatoUno,PartidoUno),candidato(CandidatoDos,PartidoDos),PartidoUno==PartidoDos.
+mismoPartido(CandidatoUno,CandidatoDos):- candidato(CandidatoUno,PartidoUno),candidato(CandidatoDos,PartidoDos),(PartidoUno==PartidoDos).
