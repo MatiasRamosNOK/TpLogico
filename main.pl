@@ -111,8 +111,9 @@ PorcentajeUno>PorcentajeDos.
 
 leGanaA(CandidatoUno,CandidatoDos,Provincia):-
 sePresenta(CandidatoUno,Provincia),
-not(sePresenta(CandidatoDos,Provincia)),
-not(mismoPartido(CandidatoUno,CandidatoDos)).
+sePresentan(Provincia,ListaPartidos),
+length(ListaPartidos,Longitud),
+Longitud == 1.
 
 leGanaA(CandidatoUno,CandidatoDos,Provincia):-
 mismoPartido(CandidatoUno,CandidatoDos),
