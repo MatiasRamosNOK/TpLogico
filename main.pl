@@ -17,7 +17,7 @@ edad(jackie,38).
 edad(claire,52).
 edad(garrett,64).
 sePresentan(buenosAires,[rojo,azul,amarillo]).
-sePresentan(chacho,[rojo,amarillo]).
+sePresentan(chaco,[rojo,amarillo]).
 sePresentan(tierraDelFuego,[rojo,azul]).
 sePresentan(sanLuis,[rojo,azul]).
 sePresentan(neuquen,[azul]).
@@ -32,7 +32,7 @@ sePresentan(laPampa,[amarillo]).
 sePresentan(corrientes,[amarillo]).
 sePresentan(misiones,[amarillo]).
 habitantes(buenosAires,15335000).
-habitantes(chacho,1143201).
+habitantes(chaco,1143201).
 habitantes(tierraDelFuego,160720).
 habitantes(sanLuis,489255).
 habitantes(neuquen,637913).
@@ -45,6 +45,22 @@ habitantes(salta,1333365).
 habitantes(santaCruz,273964).
 habitantes(laPampa,273964).
 habitantes(corrientes,992595).
+intencionDeVoto(buenosAires,[40,30,30]).
+intencionDeVoto(chaco,[50,20,0]).
+intencionDeVoto(tierraDelFuego,[40,20,10]).
+intencionDeVoto(sanLuis,[50,20,0]).
+intencionDeVoto(neuquen,[80,10,0]).
+intencionDeVoto(santaFe,[20,40,40]).
+intencionDeVoto(cordoba,[10,60,20]).
+intencionDeVoto(chubut,[15,15,15]).
+intencionDeVoto(formosa,[0,0,0]).
+intencionDeVoto(tucuman,[40,40,20]).
+intencionDeVoto(salta,[30,60,10]).
+intencionDeVoto(santaCruz,[10,20,30]).
+intencionDeVoto(laPampa,[25,25,40]).
+intencionDeVoto(corrientes,[30,30,10]).
+intencionDeVoto(misiones,[90,0,0]).
+
 intencionDeVotoEn(buenosAires, rojo, 40).
 intencionDeVotoEn(buenosAires, azul, 30).
 intencionDeVotoEn(buenosAires, amarillo, 30).
@@ -93,6 +109,7 @@ intencionDeVotoEn(misiones, amarillo, 0).
 
 
 
+
 esPicante(Provincia):- habitantes(Provincia,Numero),Numero>1000000, sePresentan(Provincia,Alguien),length(Alguien,Numero2),Numero2>=3.
 
 %Hay tres casos
@@ -100,6 +117,8 @@ esPicante(Provincia):- habitantes(Provincia,Numero),Numero>1000000, sePresentan(
 %Ambos se presentan (distintos partidos) entonces se hace diferencia por votos, si hay empate no se cumple
 %Ambos se presentan (igual partido) entonces gana el primero
 
+
+%Punto tres
 leGanaA(CandidatoUno,CandidatoDos,Provincia):- 
 sePresenta(CandidatoUno,Provincia),
 sePresenta(CandidatoDos,Provincia),
@@ -111,9 +130,9 @@ PorcentajeUno>PorcentajeDos.
 
 leGanaA(CandidatoUno,CandidatoDos,Provincia):-
 sePresenta(CandidatoUno,Provincia),
+candidato(CandidatoUno,Partido),
 sePresentan(Provincia,ListaPartidos),
-length(ListaPartidos,Longitud),
-Longitud == 1.
+member(Partido,ListaPartidos).
 
 leGanaA(CandidatoUno,CandidatoDos,Provincia):-
 mismoPartido(CandidatoUno,CandidatoDos),
@@ -121,3 +140,23 @@ sePresenta(CandidatoUno,Provincia).
 
 sePresenta(Candidato,Provincia):- candidato(Candidato,Partido),sePresentan(Provincia,ListaPartidos),member(Partido,ListaPartidos). 
 mismoPartido(CandidatoUno,CandidatoDos):- candidato(CandidatoUno,PartidoUno),candidato(CandidatoDos,PartidoDos),(PartidoUno==PartidoDos).
+
+%Punto cuatro
+elGranCandidato(Candidato):- 
+candidato(CandidatoDos,_),
+forall(dondeCompite(Candidato,ListaProvincias),(leGanaA(Candidato,CandidatoDos,ListaProvincias),Candidato\==CandidatoDos)).
+dondeCompite(Candidato,ListaProvincias):- candidato(Candidato,Partido),sePresentan(ListaProvincias,ListaPartidos),member(Partido,ListaPartidos).
+%compañerosDeFormula(Candidato,Candidatos):- candidato(Candidato,PartidoUno),findall(CandidatoDos,(candidato(CandidatoDos,PartidoDos),PartidoUno==PartidoDos,Candidato\==CandidatoDos),Candidatos).
+
+%Punto cinco
+malasConsultoras(Partido,Provincia,PorcentajeRealVoto):-
+intencionDeVotoEn(Provincia,Partido,Numero),
+forall((intencionDeVotoEn(Provincia,Partidos,Numeros),Partido\==Partidos),Numero>Numeros),
+PorcentajeRealVoto is (Numero-20).
+
+malasConsultoras(Partido,Provincia,PorcentajeRealVoto):-
+intencionDeVotoEn(Provincia,Partido,Numero),
+intencionDeVoto(Provincia,ListaVotos),
+max_member(NumeroDos,ListaVotos),
+Numero<NumeroDos,
+PorcentajeRealVoto is (Numero+5).
