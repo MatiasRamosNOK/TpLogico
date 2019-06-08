@@ -162,6 +162,14 @@ forall(dondeCompite(Candidato,ListaProvincias),(leGanaA(Candidato,CandidatoDos,L
 dondeCompite(Candidato,ListaProvincias):- candidato(Candidato,Partido),sePresentan(ListaProvincias,ListaPartidos),member(Partido,ListaPartidos).
 %compañerosDeFormula(Candidato,Candidatos):- candidato(Candidato,PartidoUno),findall(CandidatoDos,(candidato(CandidatoDos,PartidoDos),PartidoUno==PartidoDos,Candidato\==CandidatoDos),Candidatos).
 
+elMenorDelPartido(Candidato):-
+	candidato(Candidato,Partido),
+	findall(Edad,(candidato(UnCandidato,Partido),edad(UnCandidato,Edad)),EdadesCandidatos),
+  edad(Candidato,EdadCandidato),
+	min_list(EdadesCandidatos,EdadCandidato).
+
+
+
 %Punto cinco
 malasConsultoras(Partido,Provincia,PorcentajeRealVoto):-
 intencionDeVotoEn(Provincia,Partido,Numero),
