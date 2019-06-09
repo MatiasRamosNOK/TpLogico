@@ -186,3 +186,40 @@ PorcentajeRealVoto is (Numero+5).
 %Punto seis
 promete(Partido,Algo):-
 partido(Partido,Algo).
+
+%punto siete
+influenciaDePromesas(inflacion(CotaInferior,CotaSuperior),Influencia):-
+	Influencia is -(CotaInferior + CotaSuperior)/2.
+influenciaDePromesas(nuevosPuestosDeTrabajo(Cantidad),Influencia):-
+	Cantidad >= 50000,
+	Influencia is 3.
+
+influenciaDePromesas(construir([edilicio(hospital,_)]),Influencia):-
+	Influencia is 2.
+influenciaDePromesas(construir([edilicio(hospital,_)|SiguientesEdilicios]),Influencia):-
+	influenciaDePromesas(construir(SiguientesEdilicios),SegundaInfluencia),
+	Influencia is 2 + SegundaInfluencia.
+influenciaDePromesas(construir([edilicio(jardines,Cantidad)]),Influencia):-
+	Influencia is Cantidad * 0.1.
+influenciaDePromesas(construir([edilicio(jardines,Cantidad)| SiguientesEdilicios]),Influencia):-
+	influenciaDePromesas(construir(SiguientesEdilicios),SegundaInfluencia),
+	Influencia is (Cantidad*0.1)+SegundaInfluencia.
+influenciaDePromesas(construir([edilicio(escuelas,Cantidad)]),Influencia):-
+	Influencia is Cantidad * 0.1.
+influenciaDePromesas(construir([edilicio(escuelas,Cantidad)|SiguientesEdilicios]), Influencia):-
+	influenciaDePromesas(construir(SiguientesEdilicios),SegundaInfluencia),
+	Influencia is (Cantidad * 0.1)+SegundaInfluencia.
+influenciaDePromesas(construir([edilicio(comisarias,200)]),Influencia):-
+	Influencia is 200.
+influenciaDePromesas(construir([edilicio(comisarias,200)|SiguientesEdilicios]),Influencia):-
+	influenciaDePromesas(construir(SiguientesEdilicios),SegundaInfluencia),
+	Influencia is 200+SegundaInfluencia.
+influenciaDePromesas(construir([edilicio(universidad,_)]),0).
+influenciaDePromesas(construir([edilicio(universidad,_)|SiguientesEdilicios]),Influencia):-
+	influenciaDePromesas(construir(SiguientesEdilicios),SegundaInfluencia),
+	Influencia is SegundaInfluencia.
+%sumaDeEdilicios(construir([edilicio(_,_)]),-1).
+%sumaDeEdilicios(construir([edilicio(_,_)|SiguientesEdilicios]),Influencia):-
+%%sumaDeEdilicios(construir(SiguientesEdilicios),SegundaInfluencia),
+%	Influencia is -1 + SegundaInfluencia.
+%
