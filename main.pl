@@ -113,7 +113,7 @@ intencionDeVotoEn(misiones, amarillo, 0).
 % edilicio(hospital, 800)
 
 partido(azul,construir([edilicio(hospital,1000),edilicio(jardines,100),edilicio(escuelas,5)])).
-partido(amarillo,construir([edilicio(hospital,100),edilicio(universidad,1),edilicio(comisaria,200)])).
+partido(amarillo,construir([edilicio(hospital,100),edilicio(universidad,1),edilicio(comisarias,200)])).
 partido(rojo,nuevosPuestosDeTrabajo(800000)).
 partido(amarillo,nuevosPuestosDeTrabajo(10000)).
 partido(rojo,inflacion(10,30)).
@@ -210,7 +210,7 @@ influenciaDePromesas(construir([edilicio(escuelas,Cantidad)|SiguientesEdilicios]
 	influenciaDePromesas(construir(SiguientesEdilicios),SegundaInfluencia),
 	Influencia is (Cantidad * 0.1)+SegundaInfluencia.
 influenciaDePromesas(construir([edilicio(comisarias,200)]),Influencia):-
-	Influencia is 200.
+	Influencia is 2.
 influenciaDePromesas(construir([edilicio(comisarias,200)|SiguientesEdilicios]),Influencia):-
 	influenciaDePromesas(construir(SiguientesEdilicios),SegundaInfluencia),
 	Influencia is 200+SegundaInfluencia.
@@ -223,3 +223,10 @@ influenciaDePromesas(construir([edilicio(universidad,_)|SiguientesEdilicios]),In
 %%sumaDeEdilicios(construir(SiguientesEdilicios),SegundaInfluencia),
 %	Influencia is -1 + SegundaInfluencia.
 %
+
+%8
+promedioDeCrecimiento(Partido,CrecimientoBrindado):-
+	partido(Partido,UnaPromesa),
+	findall(Influencia,((partido(Partido,Promesa),influenciaDePromesas(Promesa,Influencia))),ListaDeInfluencias),
+	sum_list(ListaDeInfluencias,CrecimientoBrindado).
+
