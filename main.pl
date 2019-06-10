@@ -1,4 +1,4 @@
-%candidato(persona,partido).
+%candidato(Persona,Partido).
 candidato(frank,rojo).
 candidato(claire,rojo).
 candidato(garrett,azul).
@@ -7,7 +7,7 @@ candidato(linda,azul).
 candidato(catherine,rojo).
 candidato(seth,amarillo).
 candidato(heather,amarillo).
-not(candidato(peter,amarillo)).
+%edad(Persona,Edad).
 edad(heather,50).
 edad(catherine,59).
 edad(linda,30).
@@ -16,6 +16,7 @@ edad(peter,26).
 edad(jackie,38).
 edad(claire,52).
 edad(garrett,64).
+%sePresentan(Provincia,[Partido]).
 sePresentan(buenosAires,[rojo,azul,amarillo]).
 sePresentan(chaco,[rojo,amarillo]).
 sePresentan(tierraDelFuego,[rojo,azul]).
@@ -31,6 +32,7 @@ sePresentan(santaCruz,[amarillo]).
 sePresentan(laPampa,[amarillo]).
 sePresentan(corrientes,[amarillo]).
 sePresentan(misiones,[amarillo]).
+%habitantes(Provincia,Habitantes).
 habitantes(buenosAires,15335000).
 habitantes(chaco,1143201).
 habitantes(tierraDelFuego,160720).
@@ -45,22 +47,8 @@ habitantes(salta,1333365).
 habitantes(santaCruz,273964).
 habitantes(laPampa,273964).
 habitantes(corrientes,992595).
-intencionDeVoto(buenosAires,[40,30,30]).
-intencionDeVoto(chaco,[50,20,0]).
-intencionDeVoto(tierraDelFuego,[40,20,10]).
-intencionDeVoto(sanLuis,[50,20,0]).
-intencionDeVoto(neuquen,[80,10,0]).
-intencionDeVoto(santaFe,[20,40,40]).
-intencionDeVoto(cordoba,[10,60,20]).
-intencionDeVoto(chubut,[15,15,15]).
-intencionDeVoto(formosa,[0,0,0]).
-intencionDeVoto(tucuman,[40,40,20]).
-intencionDeVoto(salta,[30,60,10]).
-intencionDeVoto(santaCruz,[10,20,30]).
-intencionDeVoto(laPampa,[25,25,40]).
-intencionDeVoto(corrientes,[30,30,10]).
-intencionDeVoto(misiones,[90,0,0]).
-
+habitantes(misiones,1189446).
+%intencionDeVotoEn(Provincia,Partido,Porcentaje).
 intencionDeVotoEn(buenosAires, rojo, 40).
 intencionDeVotoEn(buenosAires, azul, 30).
 intencionDeVotoEn(buenosAires, amarillo, 30).
@@ -107,10 +95,10 @@ intencionDeVotoEn(misiones, rojo, 90).
 intencionDeVotoEn(misiones, azul, 0).
 intencionDeVotoEn(misiones, amarillo, 0).
 
-% inflacion(contaInferior, cotaSuperior)
-% construir(listaDeObras)
-% nuevosPuestosDeTrabajo(cantidad)
-% edilicio(hospital, 800)
+%inflacion(contaInferior, cotaSuperior)
+%construir(listaDeObras)
+%nuevosPuestosDeTrabajo(cantidad)
+%edilicio(hospital, 800)
 
 partido(azul,construir([edilicio(hospital,1000),edilicio(jardines,100),edilicio(escuelas,5)])).
 partido(amarillo,construir([edilicio(hospital,100),edilicio(universidad,1),edilicio(comisarias,200)])).
@@ -120,11 +108,15 @@ partido(rojo,inflacion(10,30)).
 partido(amarillo,inflacion(1,15)).
 partido(azul,inflacion(2,4)).
 
+%--------------------------
+%--------------------------
+%--------------------------
 
-
-
-
-esPicante(Provincia):- habitantes(Provincia,Numero),Numero>1000000, sePresentan(Provincia,Alguien),length(Alguien,Numero2),Numero2>=3.
+esPicante(Provincia):- sePresentan(Provincia,Partidos),
+					   length(Partidos,Cuantos),
+					   Cuantos>1,
+					   habitantes(Provincia,Numero),
+					   Numero>1000000.
 
 %Hay tres casos
 %CandidatoUno se presenta y CandidatoDos no -> gana CandidatoUno
@@ -133,55 +125,56 @@ esPicante(Provincia):- habitantes(Provincia,Numero),Numero>1000000, sePresentan(
 
 
 %Punto tres
-leGanaA(CandidatoUno,CandidatoDos,Provincia):- 
-sePresenta(CandidatoUno,Provincia),
-sePresenta(CandidatoDos,Provincia),
-candidato(CandidatoUno,PartidoUno),
-candidato(CandidatoDos,PartidoDos),
-intencionDeVotoEn(Provincia,PartidoUno,PorcentajeUno),
-intencionDeVotoEn(Provincia,PartidoDos,PorcentajeDos),
-PorcentajeUno>PorcentajeDos.
+leGanaA(CandidatoUno,CandidatoDos,Provincia):- candidatoSePresentaEn(CandidatoUno,Provincia),
+											   puedeGanarSi(CandidatoUno,CandidatoDos,Provincia).
+											   
+puedeGanarSi(_,CandidatoDos,Provincia):- not(candidatoSePresentaEn(CandidatoDos,Provincia)).
+puedeGanarSi(CandidatoUno,CandidatoDos,_):- mismoPartido(CandidatoUno,CandidatoDos).
+puedeGanarSi(CandidatoUno,CandidatoDos,Provincia):- candidatoSePresentaEn(CandidatoDos,Provincia),
+													candidato(CandidatoUno,PartidoUno),
+													candidato(CandidatoDos,PartidoDos),
+													intencionDeVotoEn(Provincia,PartidoUno,PorcentajeUno),
+													intencionDeVotoEn(Provincia,PartidoDos,PorcentajeDos),
+													PorcentajeUno>PorcentajeDos.
 
-leGanaA(CandidatoUno,CandidatoDos,Provincia):-
-sePresenta(CandidatoUno,Provincia),
-candidato(CandidatoUno,Partido),
-sePresentan(Provincia,ListaPartidos),
-member(Partido,ListaPartidos).
+candidatoSePresentaEn(Candidato,Provincia):- candidato(Candidato,Partido),
+											 sePresentan(Provincia,ListaPartidos),
+											 member(Partido,ListaPartidos). 
 
-leGanaA(CandidatoUno,CandidatoDos,Provincia):-
-mismoPartido(CandidatoUno,CandidatoDos),
-sePresenta(CandidatoUno,Provincia).
-
-sePresenta(Candidato,Provincia):- candidato(Candidato,Partido),sePresentan(Provincia,ListaPartidos),member(Partido,ListaPartidos). 
-mismoPartido(CandidatoUno,CandidatoDos):- candidato(CandidatoUno,PartidoUno),candidato(CandidatoDos,PartidoDos),(PartidoUno==PartidoDos).
+mismoPartido(CandidatoUno,CandidatoDos):- candidato(CandidatoUno,PartidoUno),
+										  candidato(CandidatoDos,PartidoDos),
+										  PartidoUno=PartidoDos.
 
 %Punto cuatro
-elGranCandidato(Candidato):- 
-candidato(CandidatoDos,_),
-forall(dondeCompite(Candidato,ListaProvincias),(leGanaA(Candidato,CandidatoDos,ListaProvincias),Candidato\==CandidatoDos)).
-dondeCompite(Candidato,ListaProvincias):- candidato(Candidato,Partido),sePresentan(ListaProvincias,ListaPartidos),member(Partido,ListaPartidos).
+elGranCandidato(Candidato):- candidato(Candidato,_),
+							 forall(candidatoSePresentaEn(Candidato,Provincias),leGanaA(Candidato,_,Provincias)),
+							 elMasJoven(Candidato).
+							 
+elMasJoven(Candidato):- candidato(Candidato,Partido),
+						findall(Edad,edadesDeCandidatosDeUnPartido(Partido,Edad),ListaEdades),
+						edad(Candidato,EdadCandidato),
+						min_member(EdadCandidato,ListaEdades).
+						
+edadesDeCandidatosDeUnPartido(Partido,Edad):- candidato(Candidato,Partido),
+											  edad(Candidato, Edad).
+							 
 %compañerosDeFormula(Candidato,Candidatos):- candidato(Candidato,PartidoUno),findall(CandidatoDos,(candidato(CandidatoDos,PartidoDos),PartidoUno==PartidoDos,Candidato\==CandidatoDos),Candidatos).
 
-elMenorDelPartido(Candidato):-
-	candidato(Candidato,Partido),
-	findall(Edad,(candidato(UnCandidato,Partido),edad(UnCandidato,Edad)),EdadesCandidatos),
-  edad(Candidato,EdadCandidato),
-	min_list(EdadesCandidatos,EdadCandidato).
-
-
-
 %Punto cinco
-malasConsultoras(Partido,Provincia,PorcentajeRealVoto):-
-intencionDeVotoEn(Provincia,Partido,Numero),
-forall((intencionDeVotoEn(Provincia,Partidos,Numeros),Partido\==Partidos),Numero>Numeros),
-PorcentajeRealVoto is (Numero-20).
+ajusteConsultora(Partido,Provincia,PorcentajeReal):- intencionDeVotoEn(Provincia,Partido,Porcentaje),
+													 correccionDePorcentaje(Partido,Provincia,Porcentaje,PorcentajeReal).
+													 
+correccionDePorcentaje(Partido,Provincia,Porcentaje,PorcentajeReal):- partidoGanaEnProvincia(Partido,Provincia),
+																	  PorcentajeReal is Porcentaje - 20.
+correccionDePorcentaje(Partido,Provincia,Porcentaje,PorcentajeReal):- not(partidoGanaEnProvincia(Partido,Provincia)),
+																	  PorcentajeReal is Porcentaje + 5.
 
-malasConsultoras(Partido,Provincia,PorcentajeRealVoto):-
-intencionDeVotoEn(Provincia,Partido,Numero),
-intencionDeVoto(Provincia,ListaVotos),
-max_member(NumeroDos,ListaVotos),
-Numero<NumeroDos,
-PorcentajeRealVoto is (Numero+5).
+partidoGanaEnProvincia(Partido,Provincia):- intencionDeVotoEn(Provincia,Partido,Porcentaje),
+											findall(PorcentajesPartidos, intencionDeVotoEn(Provincia,_,PorcentajesPartidos),ListaPorcentajes),
+											max_member(Porcentaje,ListaPorcentajes).
+
+
+
 
 %Punto seis
 promete(Partido,Algo):-
@@ -224,7 +217,7 @@ influenciaDePromesas(construir([edilicio(universidad,_)|SiguientesEdilicios]),In
 %	Influencia is -1 + SegundaInfluencia.
 %
 
-%8
+%g8
 promedioDeCrecimiento(Partido,CrecimientoBrindado):-
 	partido(Partido,UnaPromesa),
 	findall(Influencia,((partido(Partido,Promesa),influenciaDePromesas(Promesa,Influencia))),ListaDeInfluencias),
