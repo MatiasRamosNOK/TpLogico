@@ -98,10 +98,10 @@ intencionDeVotoEn(misiones, amarillo, 0).
 %inflacion(contaInferior, cotaSuperior)
 %construir(listaDeObras)
 %nuevosPuestosDeTrabajo(cantidad)
-%edilicio(hospital, 800)
+%edilicio(unEdilicio, cantidad)
 
-partido(azul,construir([edilicio(hospital,1000),edilicio(jardines,100),edilicio(escuelas,5)])).
-partido(amarillo,construir([edilicio(hospital,100),edilicio(universidad,1),edilicio(comisarias,200)])).
+partido(azul,construir([edilicio(hospitales,1000),edilicio(jardines,100),edilicio(escuelas,5)])).
+partido(amarillo,construir([edilicio(hospitales,100),edilicio(universidades,1),edilicio(comisarias,200)])).
 partido(rojo,nuevosPuestosDeTrabajo(800000)).
 partido(amarillo,nuevosPuestosDeTrabajo(10000)).
 partido(rojo,inflacion(10,30)).
@@ -177,16 +177,48 @@ partidoGanaEnProvincia(Partido,Provincia):- intencionDeVotoEn(Provincia,Partido,
 
 
 %Punto seis
-promete(Partido,Algo):-
-partido(Partido,Algo).
+promete(Partido,Algo):- partido(Partido,Algo).
 
 %punto siete
-influenciaDePromesas(inflacion(CotaInferior,CotaSuperior),Influencia):-
-	Influencia is -(CotaInferior + CotaSuperior)/2.
-influenciaDePromesas(nuevosPuestosDeTrabajo(Cantidad),Influencia):-
-	Cantidad >= 50000,
-	Influencia is 3.
+influenciaDePromesas(inflacion(CotaInferior,CotaSuperior),Influencia):- Influencia is -(CotaInferior + CotaSuperior)/2.
 
+influenciaDePromesas(nuevosPuestosDeTrabajo(Cantidad),3):- Cantidad >= 50000.
+influenciaDePromesas(nuevosPuestosDeTrabajo(Cantidad),0):- Cantidad < 50000.
+
+influenciaDePromesas(construir([UnaObra]),Influencia):- calculoInfluenciaQueGenera(UnaObra,Influencia).
+influenciaDePromesas(construir([UnaObra|ListaObras]),Influencia):- calculoInfluenciaQueGenera(UnaObra,UnaInfluencia),
+																   influenciaDePromesas(construir(ListaObras),OtraInfluencia),
+																   Influencia is UnaInfluencia + OtraInfluencia.
+
+calculoInfluenciaQueGenera(edilicio(hospitales,_),2).
+calculoInfluenciaQueGenera(edilicio(Lugar,Cantidad),Influencia):- formacionBasica(Lugar),
+																  Influencia is 0.1 * Cantidad.
+calculoInfluenciaQueGenera(edilicio(comisarias,200),2).
+calculoInfluenciaQueGenera(edilicio(comisarias,Cantidad),0):- Cantidad \= 200.
+calculoInfluenciaQueGenera(edilicio(universidades,_),0).
+calculoInfluenciaQueGenera(edilicio(Otro,_),-1):- not(esEdilicioImportante(Otro)).
+
+formacionBasica(escuelas).
+formacionBasica(jardines).
+
+esEdilicioImportante(hospitales).
+esEdilicioImportante(escuelas).
+esEdilicioImportante(jardines).
+esEdilicioImportante(comisarias).
+esEdilicioImportante(universidades).
+
+%punto ocho
+promedioDeCrecimiento(Partido,CrecimientoBrindado):-
+													 partido(Partido,_),
+													 findall(Influencia,influenciaDePromesaDePartido(Partido,Influencia),ListaDeInfluencias),
+													 sum_list(ListaDeInfluencias,CrecimientoBrindado).
+	
+influenciaDePromesaDePartido(Partido,Influencia):- partido(Partido,Promesa),
+												   influenciaDePromesas(Promesa,Influencia).
+
+% --------- ----------- ----------
+
+/*
 influenciaDePromesas(construir([edilicio(hospital,_)]),Influencia):-
 	Influencia is 2.
 influenciaDePromesas(construir([edilicio(hospital,_)|SiguientesEdilicios]),Influencia):-
@@ -217,9 +249,4 @@ influenciaDePromesas(construir([edilicio(universidad,_)|SiguientesEdilicios]),In
 %	Influencia is -1 + SegundaInfluencia.
 %
 
-%g8
-promedioDeCrecimiento(Partido,CrecimientoBrindado):-
-	partido(Partido,UnaPromesa),
-	findall(Influencia,((partido(Partido,Promesa),influenciaDePromesas(Promesa,Influencia))),ListaDeInfluencias),
-	sum_list(ListaDeInfluencias,CrecimientoBrindado).
-
+*/
