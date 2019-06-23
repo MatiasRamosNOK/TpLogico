@@ -147,15 +147,16 @@ mismoPartido(CandidatoUno,CandidatoDos):- candidato(CandidatoUno,Partido),
 %Punto cuatro
 elGranCandidato(Candidato):- candidato(Candidato,_),
 							 forall(candidatoSePresentaEn(Candidato,Provincias),leGanaA(Candidato,_,Provincias)),
-							 elMasJoven(Candidato).
+							 elMasJovenDelPartido(Candidato).
 							 
-elMasJoven(Candidato):- candidato(Candidato,Partido),
-						findall(Edad,edadesDeCandidatosDeUnPartido(Partido,Edad),ListaEdades),
-						edad(Candidato,EdadCandidato),
-						min_member(EdadCandidato,ListaEdades).
-						
-edadesDeCandidatosDeUnPartido(Partido,Edad):- candidato(Candidato,Partido),
-											  edad(Candidato, Edad).
+elMasJovenDelPartido(Candidato):- candidato(Candidato,_),
+	mismoPartido(Candidato,OtroCandidato),
+	forall(candidato(Candidato,_),esMasJovenQue(Candidato,OtroCandidato)).
+
+esMasJovenQue(UnCandidato,OtroCandidato):- edad(UnCandidato,UnaEdad),
+	edad(OtroCandidato,OtraEdad),
+	UnaEdad < OtraEdad.
+
 							 
 %compañerosDeFormula(Candidato,Candidatos):- candidato(Candidato,PartidoUno),findall(CandidatoDos,(candidato(CandidatoDos,PartidoDos),PartidoUno==PartidoDos,Candidato\==CandidatoDos),Candidatos).
 
