@@ -141,9 +141,8 @@ candidatoSePresentaEn(Candidato,Provincia):- candidato(Candidato,Partido),
 											 sePresentan(Provincia,ListaPartidos),
 											 member(Partido,ListaPartidos). 
 
-mismoPartido(CandidatoUno,CandidatoDos):- candidato(CandidatoUno,PartidoUno),
-										  candidato(CandidatoDos,PartidoDos),
-										  PartidoUno=PartidoDos.
+mismoPartido(CandidatoUno,CandidatoDos):- candidato(CandidatoUno,Partido),
+										  candidato(CandidatoDos,Partido).
 
 %Punto cuatro
 elGranCandidato(Candidato):- candidato(Candidato,_),
