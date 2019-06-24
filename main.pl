@@ -134,11 +134,11 @@ esPicante(Provincia):-
 
 %Punto tres
 leGanaA(CandidatoUno,CandidatoDos,Provincia):- candidatoSePresentaEn(CandidatoUno,Provincia),
-											   puedeGanarSi(CandidatoUno,CandidatoDos,Provincia).
+											   ganaElCandidatoA(CandidatoUno,CandidatoDos,Provincia).
 											   
-puedeGanarSi(_,CandidatoDos,Provincia):- not(candidatoSePresentaEn(CandidatoDos,Provincia)).
-puedeGanarSi(CandidatoUno,CandidatoDos,_):- mismoPartido(CandidatoUno,CandidatoDos).
-puedeGanarSi(CandidatoUno,CandidatoDos,Provincia):- candidatoSePresentaEn(CandidatoDos,Provincia),
+ganaElCandidatoA(_,CandidatoDos,Provincia):- not(candidatoSePresentaEn(CandidatoDos,Provincia)).
+ganaElCandidatoA(CandidatoUno,CandidatoDos,_):- mismoPartido(CandidatoUno,CandidatoDos).
+ganaElCandidatoA(CandidatoUno,CandidatoDos,Provincia):- candidatoSePresentaEn(CandidatoDos,Provincia),
 													candidato(CandidatoUno,PartidoUno),
 													candidato(CandidatoDos,PartidoDos),
 													intencionDeVotoEn(Provincia,PartidoUno,PorcentajeUno),
