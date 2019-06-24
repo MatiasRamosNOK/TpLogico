@@ -117,11 +117,13 @@ partido(azul,inflacion(2,4)).
 %--------------------------
 %--------------------------
 
-esPicante(Provincia):- sePresentan(Provincia,Partidos),
-					   length(Partidos,Cuantos),
-					   Cuantos>1,
-					   habitantes(Provincia,Numero),
-					   Numero>1000000.
+esPicante(Provincia):-
+	habitantes(Provincia,CantidadHabitantes),
+	CantidadHabitantes>1000000,
+	findall(Partido,sePresentan(Provincia,Partido),Partidos),
+	length(Partidos,Cantidad),
+	Cantidad >= 2.
+
 
 %Hay tres casos
 %CandidatoUno se presenta y CandidatoDos no -> gana CandidatoUno
