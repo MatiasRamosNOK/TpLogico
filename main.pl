@@ -105,13 +105,14 @@ intencionDeVotoEn(misiones, amarillo, 0).
 %nuevosPuestosDeTrabajo(cantidad)
 %edilicio(unEdilicio, cantidad)
 
-partido(azul,construir([edilicio(hospitales,1000),edilicio(jardines,100),edilicio(escuelas,5)])).
-partido(amarillo,construir([edilicio(hospitales,100),edilicio(universidades,1),edilicio(comisarias,200)])).
-partido(rojo,nuevosPuestosDeTrabajo(800000)).
-partido(amarillo,nuevosPuestosDeTrabajo(10000)).
-partido(rojo,inflacion(10,30)).
-partido(amarillo,inflacion(1,15)).
-partido(azul,inflacion(2,4)).
+promesaDelPartido(azul,construir([edilicio(hospitales,1000),edilicio(jardines,100),edilicio(escuelas,5)])).
+promesaDelPartido(amarillo,construir([edilicio(hospitales,100),edilicio(universidades,1),edilicio(comisarias,200)])).
+promesaDelPartido(rojo,nuevosPuestosDeTrabajo(800000)).
+promesaDelPartido(amarillo,nuevosPuestosDeTrabajo(10000)).
+promesaDelPartido(rojo,inflacion(10,30)).
+promesaDelPartido(amarillo,inflacion(1,15)).
+promesaDelPartido(azul,inflacion(2,4)).
+
 
 %--------------------------
 %--------------------------
@@ -216,11 +217,11 @@ esEdilicioImportante(universidades).
 
 %punto ocho
 promedioDeCrecimiento(Partido,CrecimientoBrindado):-
-													 partido(Partido,_),
+													 promesaDelPartido(Partido,_),
 													 findall(Influencia,influenciaDePromesaDePartido(Partido,Influencia),ListaDeInfluencias),
 													 sum_list(ListaDeInfluencias,CrecimientoBrindado).
 	
-influenciaDePromesaDePartido(Partido,Influencia):- partido(Partido,Promesa),
+influenciaDePromesaDePartido(Partido,Influencia):- promesaDelPartido(Partido,Promesa),
 												   influenciaDePromesas(Promesa,Influencia).
 
 % --------- ----------- ----------
