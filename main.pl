@@ -145,8 +145,8 @@ puedeGanarSi(CandidatoUno,CandidatoDos,Provincia):- candidatoSePresentaEn(Candid
 													PorcentajeUno>PorcentajeDos.
 
 candidatoSePresentaEn(Candidato,Provincia):- candidato(Candidato,Partido),
-											 sePresentan(Provincia,ListaPartidos),
-											 member(Partido,ListaPartidos). 
+											 sePresentan(Provincia,Partido).
+
 
 mismoPartido(CandidatoUno,CandidatoDos):- candidato(CandidatoUno,Partido),
 										  candidato(CandidatoDos,Partido).
