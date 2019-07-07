@@ -154,6 +154,11 @@ mismoPartido(CandidatoUno,CandidatoDos):- candidato(CandidatoUno,Partido),
 
 esCandidato(Candidato):- candidato(Candidato,_).
 
+%Test en consola para provar que funciona:
+%esCandidato(Cand1), esCandidato(Cand2), not(mismoPartido(Cand1,Cand2)), leGanaA(Cand1,Cand2,Donde).
+%Test en consola para provar que no ocurra que uno le gane a otro y viceversa:
+%esCandidato(Cand1), esCandidato(Cand2), not(mismoPartido(Cand1,Cand2)), leGanaA(Cand1,Cand2,Donde), leGanaA(Cand2, Cand1, Donde).
+
 %Punto cuatro
 elGranCandidato(Candidato):- ganaEnTodasLasProvinciasDondeSePresenta(Candidato),
 	elMasJovenDelPartido(Candidato).
