@@ -118,13 +118,13 @@ promesaDelPartido(azul,inflacion(2,4)).
 %--------------------------
 %--------------------------
 
-esPicante(Provincia):-
-	habitantes(Provincia,CantidadHabitantes),
+esPicante(Provincia):- habitantes(Provincia,CantidadHabitantes),
 	CantidadHabitantes>1000000,
-	findall(Partido,sePresentan(Provincia,Partido),Partidos),
-	length(Partidos,Cantidad),
-	Cantidad >= 2.
-
+	provinciaCon2OMasPartidos(Provincia).
+	
+provinciaCon2OMasPartidos(Provincia):- sePresentan(Provincia, UnPartido),
+	sePresentan(Provincia, OtroPartido),
+	UnPartido \= OtroPartido.
 
 %Hay tres casos
 %CandidatoUno se presenta y CandidatoDos no -> gana CandidatoUno
