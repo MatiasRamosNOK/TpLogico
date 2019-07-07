@@ -137,33 +137,39 @@ leGanaA(CandidatoUno,CandidatoDos,Provincia):- candidatoSePresentaEn(CandidatoUn
 											   ganaElCandidatoA(CandidatoUno,CandidatoDos,Provincia).
 											   
 ganaElCandidatoA(_,CandidatoDos,Provincia):- not(candidatoSePresentaEn(CandidatoDos,Provincia)).
-ganaElCandidatoA(CandidatoUno,CandidatoDos,_):- mismoPartido(CandidatoUno,CandidatoDos).
+ganaElCandidatoA(CandidatoUno,CandidatoDos,Provincia):- mismoPartido(CandidatoUno,CandidatoDos),
+	candidatoSePresentaEn(CandidatoUno, Provincia).
 ganaElCandidatoA(CandidatoUno,CandidatoDos,Provincia):- candidatoSePresentaEn(CandidatoDos,Provincia),
-													candidato(CandidatoUno,PartidoUno),
-													candidato(CandidatoDos,PartidoDos),
-													intencionDeVotoEn(Provincia,PartidoUno,PorcentajeUno),
-													intencionDeVotoEn(Provincia,PartidoDos,PorcentajeDos),
-													PorcentajeUno>PorcentajeDos.
+	candidato(CandidatoUno,PartidoUno),
+	candidato(CandidatoDos,PartidoDos),
+	intencionDeVotoEn(Provincia,PartidoUno,PorcentajeUno),
+	intencionDeVotoEn(Provincia,PartidoDos,PorcentajeDos),
+	PorcentajeUno>PorcentajeDos.
 
 candidatoSePresentaEn(Candidato,Provincia):- candidato(Candidato,Partido),
 											 sePresentan(Provincia,Partido).
 
-
 mismoPartido(CandidatoUno,CandidatoDos):- candidato(CandidatoUno,Partido),
 										  candidato(CandidatoDos,Partido).
 
+esCandidato(Candidato):- candidato(Candidato,_).
+
 %Punto cuatro
-elGranCandidato(Candidato):- candidato(Candidato,_),
-							 forall(candidatoSePresentaEn(Candidato,Provincias),leGanaA(Candidato,_,Provincias)),
-							 elMasJovenDelPartido(Candidato).
-							 
-elMasJovenDelPartido(Candidato):- candidato(Candidato,_),
-	mismoPartido(Candidato,OtroCandidato),
-	forall(candidato(Candidato,_),esMasJovenQue(Candidato,OtroCandidato)).
+elGranCandidato(Candidato):- ganaEnTodasLasProvinciasDondeSePresenta(Candidato),
+	elMasJovenDelPartido(Candidato).
+	
+ganaEnTodasLasProvinciasDondeSePresenta(Candidato):- esCandidato(Candidato),
+	forall(candidatoSePresentaEn(Candidato, Provincia),leGanaATodosEnLaProvincia(Candidato,Provincia)).
+	
+leGanaATodosEnLaProvincia(Candidato, Provincia):- candidatoSePresentaEn(Candidato, Provincia),
+	forall(candidatoSePresentaEn(OtroCandidato, Provincia), leGanaA(Candidato, OtroCandidato, Provincia)).
+	
+elMasJovenDelPartido(Candidato):- esCandidato(Candidato),
+	forall(mismoPartido(Candidato, OtroCandidato),esMasJovenQue(Candidato,OtroCandidato)).
 
 esMasJovenQue(UnCandidato,OtroCandidato):- edad(UnCandidato,UnaEdad),
 	edad(OtroCandidato,OtraEdad),
-	UnaEdad < OtraEdad.
+	UnaEdad =< OtraEdad.
 
 							 
 %compañerosDeFormula(Candidato,Candidatos):- candidato(Candidato,PartidoUno),findall(CandidatoDos,(candidato(CandidatoDos,PartidoDos),PartidoUno==PartidoDos,Candidato\==CandidatoDos),Candidatos).
