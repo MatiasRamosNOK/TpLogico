@@ -175,6 +175,11 @@ elMasJovenDelPartido(Candidato):- esCandidato(Candidato),
 esMasJovenQue(UnCandidato,OtroCandidato):- edad(UnCandidato,UnaEdad),
 	edad(OtroCandidato,OtraEdad),
 	UnaEdad =< OtraEdad.
+%Teoria punto cuatro
+%Podemos estar seguro que Frank es el gran candidato porque cumple ambas condiciones segun la base de conocimiento que tenemos hasta el momento.
+%A su vez podemos preguntar quien satisface el predicado elGranCandidato(QuienEs) y el mismo nos indica que es Frank-
+%Esta relacionado con el motor de Prolog el cual busca siempre cual es el individuo que satisface dicha consulta.
+ 
 
 							 
 %compañerosDeFormula(Candidato,Candidatos):- candidato(Candidato,PartidoUno),findall(CandidatoDos,(candidato(CandidatoDos,PartidoDos),PartidoUno==PartidoDos,Candidato\==CandidatoDos),Candidatos).
@@ -191,8 +196,8 @@ correccionDePorcentaje(Partido,Provincia,Porcentaje,PorcentajeReal):- not(partid
 partidoGanaEnProvincia(Partido,Provincia):- intencionDeVotoEn(Provincia,Partido,Porcentaje),
 											findall(PorcentajesPartidos, intencionDeVotoEn(Provincia,_,PorcentajesPartidos),ListaPorcentajes),
 											max_member(Porcentaje,ListaPorcentajes).
-
-
+%Teoria punto cinco: Para evaluar todos los predicados con los valores reales de votos
+%deberiamos modificar el predicado ajusteConsulta con un findall.
 
 
 %Punto seis
